@@ -10,5 +10,6 @@ namespace DefectTrackingInformationSystem.Models
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Defect> Defectes { get; set; }
     }
 }
