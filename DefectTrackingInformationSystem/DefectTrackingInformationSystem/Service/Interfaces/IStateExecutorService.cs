@@ -2,9 +2,8 @@
 
 namespace DefectTrackingInformationSystem.Service.Interfaces
 {
-    public interface ICommandExecutorService
-
+    public interface IStateExecutorService
     {
-        Task ExecuteAsync(Update update);
+        Task ExecuteStateAsync(Update update);
     }
 }

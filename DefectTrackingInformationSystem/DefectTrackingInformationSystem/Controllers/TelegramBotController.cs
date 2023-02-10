@@ -3,6 +3,7 @@ using DefectTrackingInformationSystem.Service;
 using DefectTrackingInformationSystem.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Diagnostics;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -14,11 +15,12 @@ namespace DefectTrackingInformationSystem.Controllers
     [Route("api/message/update")]
     public class TelegramBotController : Controller
     {
-        private readonly ICommandExecutorService _commandExecutor;
+        
+        private readonly IStateExecutorService _stateExecutorService;
 
-        public TelegramBotController(ICommandExecutorService commandExecutor)
+        public TelegramBotController(IStateExecutorService stateExecutorService)
         {
-            _commandExecutor = commandExecutor;
+            _stateExecutorService = stateExecutorService;
         }
 
         [HttpPost]
@@ -33,10 +35,11 @@ namespace DefectTrackingInformationSystem.Controllers
 
             try
             {
-                await _commandExecutor.ExecuteAsync(upd);
+                await _stateExecutorService.ExecuteStateAsync(upd);
             }
             catch (Exception e)
             {
+                
                 return Ok();
             }
 

@@ -1,39 +1,36 @@
-﻿using DefectTrackingInformationSystem.Models;
-using DefectTrackingInformationSystem.Service;
+﻿using DefectTrackingInformationSystem.Commands;
+using DefectTrackingInformationSystem.Models;
 using DefectTrackingInformationSystem.Service.Interfaces;
+using DefectTrackingInformationSystem.Service;
+using Telegram.Bot.Types.Enums;
 using Telegram.Bot;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
 
-namespace DefectTrackingInformationSystem.Commands
+namespace DefectTrackingInformationSystem.State
 {
-    public class AddNumberRoomCommand : BaseCommand
+    public class InputNumberRoomState: State
     {
         private readonly TelegramBotClient _botClient;
-        private readonly DataBaseContext _context;
-        private readonly IUserService _userService;
+    
+       
 
-        public AddNumberRoomCommand(TelegramBotService telegramBotService, DataBaseContext context, IUserService userService)
+        public InputNumberRoomState(TelegramBotService telegramBotService)
         {
-            _botClient = telegramBotService.GetTelegramBot().Result;
-            _context = context;
-            _userService = userService;
+            _botClient = telegramBotService.GetTelegramBot().Result;  
+            
         }
 
-        public override string Name => CommandNames.InputNumberRooms;
+        public override string Name => CommandNames.InputNumberRoomsCommand;
 
-        public override async Task ExecuteAsync(Update update)
+        public override async Task ExecuteStateAsync(Update update)
         {
             var message = update.Message;
-            if(message.Text != null)
+            if (message.Text != null)
             {
                 uint numRoom;
-                if(uint.TryParse(message.Text, out numRoom))
+                if (uint.TryParse(message.Text, out numRoom))
                 {
-                    var defect = new Defect { RoomNumber = numRoom };
-
-                    await _context.Defectes.AddAsync(defect);
-                    await _context.SaveChangesAsync();
+                    defect.RoomNumber = numRoom;                   
 
                     var messageText = "Опишіть проблему: ";
                     await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);

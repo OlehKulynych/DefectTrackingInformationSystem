@@ -2,6 +2,7 @@ using DefectTrackingInformationSystem.Commands;
 using DefectTrackingInformationSystem.Models;
 using DefectTrackingInformationSystem.Service;
 using DefectTrackingInformationSystem.Service.Interfaces;
+using DefectTrackingInformationSystem.State;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,13 +18,20 @@ builder.Services.AddDbContext<DataBaseContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 },ServiceLifetime.Singleton);
-builder.Services.AddSingleton<ICommandExecutorService, CommandExecutorService>();
+
+builder.Services.AddSingleton<IStateExecutorService, StateExecutorService>();
 builder.Services.AddSingleton<IUserService, UserService>();
 
-builder.Services.AddSingleton<BaseCommand, StartCommand>();
-builder.Services.AddSingleton<BaseCommand, FinishOperationCommand>();
-builder.Services.AddSingleton<BaseCommand, AddDefectCommand>();
-builder.Services.AddSingleton<BaseCommand, AddNumberRoomCommand>();
+
+
+
+builder.Services.AddSingleton<State, StartState>();
+builder.Services.AddSingleton<State, InputDefectState>();
+builder.Services.AddSingleton<State, InputNumberRoomState>();
+builder.Services.AddSingleton<State, InputDescriptionState>();
+builder.Services.AddSingleton<State, FinishInputDefectState>();
+
+
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

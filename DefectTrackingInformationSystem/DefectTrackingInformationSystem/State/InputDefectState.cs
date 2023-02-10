@@ -1,21 +1,25 @@
-﻿using DefectTrackingInformationSystem.Service;
+﻿using DefectTrackingInformationSystem.Commands;
+using DefectTrackingInformationSystem.Service;
+using Telegram.Bot.Types.Enums;
 using Telegram.Bot;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
 
-namespace DefectTrackingInformationSystem.Commands
+namespace DefectTrackingInformationSystem.State
 {
-    public class AddDefectCommand: BaseCommand
+    public class InputDefectState: State
     {
         private readonly TelegramBotClient _botClient;
 
-        public AddDefectCommand(TelegramBotService telegramBotService)
+        
+
+        public override string Name => CommandNames.InputDefectCommand;
+
+        public InputDefectState(TelegramBotService telegramBotService)
         {
             _botClient = telegramBotService.GetTelegramBot().Result;
         }
-        public override string Name => CommandNames.AddDefectCommand;
-
-        public override async Task ExecuteAsync(Update update)
+      
+        public override async Task ExecuteStateAsync(Update update)
         {
             const string message = "Для додавання нового дефекту введіть потрібну інформацію в такому вигляді : \n\nНомер кімнати з дефектом: ";
 
