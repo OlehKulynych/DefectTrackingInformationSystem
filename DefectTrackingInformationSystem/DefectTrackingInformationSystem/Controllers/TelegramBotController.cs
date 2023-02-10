@@ -1,7 +1,9 @@
 ﻿using DefectTrackingInformationSystem.Models;
 using DefectTrackingInformationSystem.Service;
+using DefectTrackingInformationSystem.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Diagnostics;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -13,32 +15,34 @@ namespace DefectTrackingInformationSystem.Controllers
     [Route("api/message/update")]
     public class TelegramBotController : Controller
     {
-        private readonly TelegramBotClient _telegramBotClient;
-        private readonly DataBaseContext dataBaseContext;
-        public TelegramBotController(TelegramBotService telegramBot, DataBaseContext dataBaseContext)
+        
+        private readonly IStateExecutorService _stateExecutorService;
+
+        public TelegramBotController(IStateExecutorService stateExecutorService)
         {
-            _telegramBotClient = telegramBot.GetTelegramBot().Result;
-            this.dataBaseContext = dataBaseContext;
+            _stateExecutorService = stateExecutorService;
         }
 
         [HttpPost]
         public async Task<IActionResult> Update([FromBody]object update)
         {
             var upd = JsonConvert.DeserializeObject<Update>(update.ToString());
-            var chat = upd.Message?.Chat;
-            var user = new User
+
+            if (upd?.Message?.Chat == null && upd?.CallbackQuery == null)
             {
-                ChatId = chat.Id.ToString(),
-                FirstName = chat.FirstName,
-                LastName = chat.LastName,
-                Id = Guid.NewGuid().ToString()
+                return Ok();
+            }
 
+            try
+            {
+                await _stateExecutorService.ExecuteStateAsync(upd);
+            }
+            catch (Exception e)
+            {
+                
+                return Ok();
+            }
 
-            };
-
-            var result = await dataBaseContext.Users.AddAsync(user);
-            await dataBaseContext.SaveChangesAsync();
-            await _telegramBotClient.SendTextMessageAsync(chat.Id, "Register",ParseMode.Markdown);
             return Ok();
         }
     }
