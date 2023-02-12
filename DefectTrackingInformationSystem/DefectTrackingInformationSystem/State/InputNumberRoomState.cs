@@ -8,7 +8,7 @@ using Telegram.Bot.Types;
 
 namespace DefectTrackingInformationSystem.State
 {
-    public class InputNumberRoomState: State
+    public class InputNumberRoomState: BaseDefectState
     {
         private readonly TelegramBotClient _botClient;
     

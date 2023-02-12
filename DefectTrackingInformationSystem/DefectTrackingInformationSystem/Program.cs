@@ -25,12 +25,18 @@ builder.Services.AddSingleton<IUserService, UserService>();
 
 
 
-builder.Services.AddSingleton<State, StartState>();
-builder.Services.AddSingleton<State, InputDefectState>();
-builder.Services.AddSingleton<State, InputNumberRoomState>();
-builder.Services.AddSingleton<State, InputDescriptionState>();
-builder.Services.AddSingleton<State, FinishInputDefectState>();
+builder.Services.AddSingleton<BaseDefectState, StartState>();
+builder.Services.AddSingleton<BaseDefectState, InputDefectState>();
+builder.Services.AddSingleton<BaseDefectState, InputNumberRoomState>();
+builder.Services.AddSingleton<BaseDefectState, InputDescriptionState>();
+builder.Services.AddSingleton<BaseDefectState, StartInputImageDefectState>();
+builder.Services.AddSingleton<BaseDefectState, InputImageDefectState>();
+builder.Services.AddSingleton<BaseDefectState, FinishInputDefectState>();
 
+
+builder.Services.AddSingleton<BaseState,FixDefectState>();
+builder.Services.AddSingleton<BaseState, FinishFixDefectState>();
+builder.Services.AddSingleton<BaseState, GetDefectsState>();
 
 
 

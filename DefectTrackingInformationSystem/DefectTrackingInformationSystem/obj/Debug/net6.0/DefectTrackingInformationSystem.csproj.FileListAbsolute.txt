@@ -82,3 +82,4 @@ D:\Projects\.NET\Intership\DefectTrackingInformationSystem\DefectTrackingInforma
 D:\Projects\.NET\Intership\DefectTrackingInformationSystem\DefectTrackingInformationSystem\DefectTrackingInformationSystem\obj\Debug\net6.0\DefectTrackingInformationSystem.pdb
 D:\Projects\.NET\Intership\DefectTrackingInformationSystem\DefectTrackingInformationSystem\DefectTrackingInformationSystem\obj\Debug\net6.0\DefectTrackingInformationSystem.genruntimeconfig.cache
 D:\Projects\.NET\Intership\DefectTrackingInformationSystem\DefectTrackingInformationSystem\DefectTrackingInformationSystem\obj\Debug\net6.0\ref\DefectTrackingInformationSystem.dll
+D:\Projects\.NET\Intership\DefectTrackingInformationSystem\DefectTrackingInformationSystem\DefectTrackingInformationSystem\obj\Debug\net6.0\DefectTrackingInformationSystem.csproj.ResolveComReference.cache
