@@ -4,19 +4,18 @@ using DefectTrackingInformationSystem.Service;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace DefectTrackingInformationSystem.State
 {
-    public class InputDescriptionState : State
+    public class InputDescriptionState : BaseDefectState
     {
-        private readonly TelegramBotClient _botClient;
-        private readonly DataBaseContext _dataBaseContext;
+        private readonly TelegramBotClient _botClient;      
         public override string Name => CommandNames.InputDecscriptionCommand;
 
         public InputDescriptionState(TelegramBotService telegramBotService, DataBaseContext dataBaseContext)
         {
-            _botClient = telegramBotService.GetTelegramBot().Result;
-            _dataBaseContext = dataBaseContext;
+            _botClient = telegramBotService.GetTelegramBot().Result;      
         }
 
         public override async Task ExecuteStateAsync(Update update)
@@ -25,15 +24,11 @@ namespace DefectTrackingInformationSystem.State
             if (message.Text != null)
             {
                 defect.Description = message.Text;
-                defect.isClosed = false;
+                          
+                var messageText = "Виберіть дію...";
+                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown, replyMarkup: GetButtons());
 
-                _dataBaseContext.Defectes.Add(defect);
-                await _dataBaseContext.SaveChangesAsync();
                 
-                var messageText = "Закінчуємо додавання...";
-                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
-
-                defect = new Defect();
             }
             else
             {
@@ -42,5 +37,19 @@ namespace DefectTrackingInformationSystem.State
                 await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
             }
         }
+
+
+        public IReplyMarkup GetButtons()
+        {
+            return new ReplyKeyboardMarkup
+            (new List<List<KeyboardButton>> {
+
+                    new List<KeyboardButton>{ new KeyboardButton("Завантажити фото дефекту") },
+                    new List<KeyboardButton>{new KeyboardButton("Завершити")}
+
+            });
+
+        }
+
     }
 }

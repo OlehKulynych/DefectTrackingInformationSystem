@@ -4,11 +4,9 @@ using Telegram.Bot.Types;
 
 namespace DefectTrackingInformationSystem.State
 {
-    public abstract class State
+    public abstract class BaseDefectState: BaseState
     {
         protected static Defect defect = new Defect();
-        public abstract string Name { get; }
-        public abstract Task ExecuteStateAsync(Update update);
 
     }
 }

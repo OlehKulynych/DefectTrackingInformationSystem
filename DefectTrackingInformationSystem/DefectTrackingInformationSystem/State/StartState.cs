@@ -6,10 +6,11 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using DefectTrackingInformationSystem.Models;
+using System.Net;
 
 namespace DefectTrackingInformationSystem.State
 {
-    public class StartState : State
+    public class StartState : BaseDefectState
     {
         private readonly IUserService _userService;
         private readonly TelegramBotClient _botClient;
@@ -26,20 +27,29 @@ namespace DefectTrackingInformationSystem.State
         public override async Task ExecuteStateAsync(Update update)
         {
             var user = await _userService.GetOrCreateUserAsync(update);
-            var inlineKeyboard = new ReplyKeyboardMarkup(new[]
-            {
-                new[]
-                {
-                    new KeyboardButton("Повідомити про дефект")
-
-
-                }
-            });
+            //var inlineKeyboard = new ReplyKeyboardMarkup(new[]
+            //{
+                
+            //        new KeyboardButton("Повідомити про дефект"),
+            //        new KeyboardButton("Переглянути наявні дефекти")
+                
+            //});
 
             await _botClient.SendTextMessageAsync(user.ChatId, "Це бот для того, щоб ви могли повідомити про знайдену вами поломку й техперсонал міг швидко її вирішити)",
-                ParseMode.Markdown, replyMarkup: inlineKeyboard);
+                ParseMode.Markdown, replyMarkup: GetButtons());
         }
 
-   
+        public IReplyMarkup GetButtons()
+        {
+            return new ReplyKeyboardMarkup
+            ( new List<List<KeyboardButton>> {
+
+                    new List<KeyboardButton>{ new KeyboardButton("Повідомити про дефект") },
+                    new List<KeyboardButton>{new KeyboardButton("Переглянути наявні дефекти")},
+                    new List<KeyboardButton>{new KeyboardButton("Виправити дефекти") }
+            } );
+
+        }
+
     }
 }
