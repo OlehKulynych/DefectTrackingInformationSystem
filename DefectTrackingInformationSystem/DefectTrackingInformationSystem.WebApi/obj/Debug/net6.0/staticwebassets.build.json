@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "S6Jx3CTnebUT1zPPEU7Hwmj78oWYvo4mtVJoACOoZ8I=",
+  "Source": "DefectTrackingInformationSystem.WebApi",
+  "BasePath": "_content/DefectTrackingInformationSystem.WebApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
