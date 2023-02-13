@@ -1,4 +1,4 @@
-﻿using DefectTrackingInformationSystem.Commands;
+﻿using DefectTrackingInformationSystem.Constants;
 using DefectTrackingInformationSystem.Models;
 using DefectTrackingInformationSystem.Service;
 using Telegram.Bot;
@@ -20,22 +20,27 @@ namespace DefectTrackingInformationSystem.State
 
         public override async Task ExecuteStateAsync(Update update)
         {
-            var message = update.Message;
-            if (message.Text != null)
+            try
             {
-                defect.Description = message.Text;
-                          
-                var messageText = "Виберіть дію...";
-                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown, replyMarkup: GetButtons());
+                var message = update.Message;
+                if (message.Text != null)
+                {
+                    defect.Description = message.Text;
 
-                
+                    var messageText = "Виберіть дію...";
+                    await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown, replyMarkup: GetButtons());
+                }
+                else
+                {
+                    var messageText = "Повторіть ще раз, тут має бути текст. ";
+                    await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
+                }
             }
-            else
+            catch(Exception ex)
             {
-
-                var messageText = "Повторіть ще раз, тут має бути текст. ";
+                var messageText = $"Помилка в InputDescriptionState: \n{ex.Message}";
                 await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
-            }
+            }           
         }
 
 
@@ -43,10 +48,8 @@ namespace DefectTrackingInformationSystem.State
         {
             return new ReplyKeyboardMarkup
             (new List<List<KeyboardButton>> {
-
                     new List<KeyboardButton>{ new KeyboardButton("Завантажити фото дефекту") },
                     new List<KeyboardButton>{new KeyboardButton("Завершити")}
-
             });
 
         }

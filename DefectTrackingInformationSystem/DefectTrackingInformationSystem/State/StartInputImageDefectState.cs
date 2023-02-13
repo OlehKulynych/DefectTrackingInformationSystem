@@ -1,4 +1,4 @@
-﻿using DefectTrackingInformationSystem.Commands;
+﻿using DefectTrackingInformationSystem.Constants;
 using DefectTrackingInformationSystem.Models;
 using DefectTrackingInformationSystem.Service;
 using Telegram.Bot;
@@ -21,17 +21,23 @@ namespace DefectTrackingInformationSystem.State
 
         public override async Task ExecuteStateAsync(Update update)
         {
-            var message = update.Message;
-            if (message.Text != null)
+            try
             {
-                var messageText = "Завантажте фото: ";
-                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
-
+                var message = update.Message;
+                if (message.Text != null)
+                {
+                    var messageText = "Завантажте фото: ";
+                    await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
+                }
+                else
+                {
+                    var messageText = "Повторіть ще раз...";
+                    await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
+                }
             }
-            else
+            catch(Exception ex)
             {
-
-                var messageText = "Повторіть ще раз...";
+                var messageText = $"Помилка в StartInputImageDefectState: \n{ex.Message}";
                 await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
             }
         }

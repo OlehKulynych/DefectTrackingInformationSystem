@@ -1,4 +1,4 @@
-﻿using DefectTrackingInformationSystem.Commands;
+﻿using DefectTrackingInformationSystem.Constants;
 using DefectTrackingInformationSystem.Models;
 using DefectTrackingInformationSystem.Service;
 using Telegram.Bot;
@@ -20,12 +20,12 @@ namespace DefectTrackingInformationSystem.State
         public override async Task ExecuteStateAsync(Update update)
         {
             var message = update.Message;
-            try { 
+            try
+            {
                 defect.isClosed = false;
-                if(defect.ImageString != null)
+                if (defect.ImageString != null)
                 {
-                    var directory = new DirectoryInfo(
-              Directory.GetCurrentDirectory());
+                    var directory = new DirectoryInfo(Directory.GetCurrentDirectory());
 
                     await using Stream fileStream = System.IO.File.OpenWrite($@"{directory.Parent.FullName}\{defect.ImageString}");
                     await _botClient.DownloadFileAsync(
@@ -33,7 +33,6 @@ namespace DefectTrackingInformationSystem.State
                         destination: fileStream);
 
                 }
-
 
                 _dataBaseContext.Defectes.Add(defect);
                 await _dataBaseContext.SaveChangesAsync();
@@ -43,10 +42,9 @@ namespace DefectTrackingInformationSystem.State
 
                 defect = new Defect();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-
-                var messageText =  $"Помилка: \n{ex.Message}";
+                var messageText = $"Помилка в FinishInputDefectState: \n{ex.Message}";
                 await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
             }
 

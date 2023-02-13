@@ -1,4 +1,4 @@
-﻿using DefectTrackingInformationSystem.Commands;
+﻿using DefectTrackingInformationSystem.Constants;
 using DefectTrackingInformationSystem.Service.Interfaces;
 using DefectTrackingInformationSystem.Service;
 using Telegram.Bot;
@@ -26,29 +26,40 @@ namespace DefectTrackingInformationSystem.State
 
         public override async Task ExecuteStateAsync(Update update)
         {
-            var user = await _userService.GetOrCreateUserAsync(update);
-            //var inlineKeyboard = new ReplyKeyboardMarkup(new[]
-            //{
-                
-            //        new KeyboardButton("Повідомити про дефект"),
-            //        new KeyboardButton("Переглянути наявні дефекти")
-                
-            //});
+            try
+            {
+                var user = await _userService.GetUserAsync(update);
+                if (user == null)
+                {
+                    await _userService.CreateUserAsync(update);
+                }
 
-            await _botClient.SendTextMessageAsync(user.ChatId, "Це бот для того, щоб ви могли повідомити про знайдену вами поломку й техперсонал міг швидко її вирішити)",
-                ParseMode.Markdown, replyMarkup: GetButtons());
+                await _botClient.SendTextMessageAsync(user.ChatId, "Це бот для того, щоб ви могли повідомити про знайдену вами поломку й техперсонал міг швидко її вирішити)",
+                    ParseMode.Markdown, replyMarkup: GetButtons(user).Result);
+            }
+            catch(Exception ex)
+            {
+                var messageText = $"Помилка в StartState: \n{ex.Message}";
+                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
+            }
         }
 
-        public IReplyMarkup GetButtons()
+        public async Task<IReplyMarkup> GetButtons(Models.User user)
         {
-            return new ReplyKeyboardMarkup
-            ( new List<List<KeyboardButton>> {
+            List<List<KeyboardButton>> keyboardButtons = new List<List<KeyboardButton>>();
 
-                    new List<KeyboardButton>{ new KeyboardButton("Повідомити про дефект") },
-                    new List<KeyboardButton>{new KeyboardButton("Переглянути наявні дефекти")},
-                    new List<KeyboardButton>{new KeyboardButton("Виправити дефекти") }
-            } );
+            if(await _userService.IsInRoleAsync(user, RoleNames.RepairEmployee))
+            {
+                keyboardButtons.Add(new List<KeyboardButton> { new KeyboardButton("Переглянути наявні дефекти") });
+                keyboardButtons.Add(new List<KeyboardButton> { new KeyboardButton("Виправити дефекти") });
+            }
+            else
+            {
+                keyboardButtons.Add(new List<KeyboardButton> { new KeyboardButton("Повідомити про дефект") });
+            }
 
+            var replyKeyboardMarkup = new ReplyKeyboardMarkup(keyboardButtons);
+            return replyKeyboardMarkup;
         }
 
     }

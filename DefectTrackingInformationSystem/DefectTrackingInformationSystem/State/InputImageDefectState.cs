@@ -1,4 +1,4 @@
-﻿using DefectTrackingInformationSystem.Commands;
+﻿using DefectTrackingInformationSystem.Constants;
 using DefectTrackingInformationSystem.Models;
 using DefectTrackingInformationSystem.Service;
 using System.Threading;
@@ -23,35 +23,37 @@ namespace DefectTrackingInformationSystem.State
 
         public override async Task ExecuteStateAsync(Update update)
         {
-            var message = update.Message;
-            if (message.Photo != null)
+            try
             {
-                var fileId = update.Message.Photo.Last().FileId;
-                var fileInfo = await _botClient.GetFileAsync(fileId);
-                var filePath = fileInfo.FilePath;
+                var message = update.Message;
+                if (message.Photo != null)
+                {
+                    var fileId = update.Message.Photo.Last().FileId;
+                    var fileInfo = await _botClient.GetFileAsync(fileId);
+                    var filePath = fileInfo.FilePath;
 
-               
-                defect.ImageString = filePath;
+                    defect.ImageString = filePath;
 
-                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, "Фото завантажено)", ParseMode.Markdown, replyMarkup: GetButtons());
-
+                    await _botClient.SendTextMessageAsync(update.Message.Chat.Id, "Фото завантажено)", ParseMode.Markdown, replyMarkup: GetButtons());
+                }
+                else
+                {
+                    await _botClient.SendTextMessageAsync(update.Message.Chat.Id, "Ви надсилаєте не фото, можливо ви надсилаєте файлом?", ParseMode.Markdown);
+                }
             }
-            else
+            catch(Exception ex)
             {
-                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, "Ви надсилаєте не фото, можливо ви надсилаєте файлом?", ParseMode.Markdown);
-
-            }
+                var messageText = $"Помилка в InputImageDefectState: \n{ex.Message}";
+                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
+            }           
         }
 
         public IReplyMarkup GetButtons()
         {
             return new ReplyKeyboardMarkup
             (new List<List<KeyboardButton>> {
-
                     new List<KeyboardButton>{new KeyboardButton("Завершити")}
-
             });
-
         }
     }
 }
