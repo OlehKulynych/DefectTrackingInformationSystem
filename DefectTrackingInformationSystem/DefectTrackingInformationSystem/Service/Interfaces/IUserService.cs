@@ -5,6 +5,10 @@ namespace DefectTrackingInformationSystem.Service.Interfaces
 {
     public interface IUserService
     {
-        Task<User> GetOrCreateUserAsync(Update update);
+        Task<User> GetUserAsync(Update update);
+        Task<User> CreateUserAsync(Update update);
+
+        Task<IList<string>> GetRolesAsync(User user);
+        Task<bool> IsInRoleAsync(User user, string roleName);
     }
 }

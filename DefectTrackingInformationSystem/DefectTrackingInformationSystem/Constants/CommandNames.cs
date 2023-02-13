@@ -1,4 +1,4 @@
-﻿namespace DefectTrackingInformationSystem.Commands
+﻿namespace DefectTrackingInformationSystem.Constants
 {
     public class CommandNames
     {

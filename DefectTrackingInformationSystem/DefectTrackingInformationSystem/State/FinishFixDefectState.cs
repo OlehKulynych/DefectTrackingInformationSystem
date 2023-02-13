@@ -1,4 +1,4 @@
-﻿using DefectTrackingInformationSystem.Commands;
+﻿using DefectTrackingInformationSystem.Constants;
 using DefectTrackingInformationSystem.Models;
 using DefectTrackingInformationSystem.Service;
 using Microsoft.EntityFrameworkCore;
@@ -29,29 +29,24 @@ namespace DefectTrackingInformationSystem.State
                 if (defect != null)
                 {
                     defect.isClosed = true;
+
                     _dataBaseContext.Defectes.Update(defect);
                     await _dataBaseContext.SaveChangesAsync();
 
                     await _botClient.EditMessageTextAsync(update.CallbackQuery.Message.Chat.Id, update.CallbackQuery.Message.MessageId, "✅ Fix");
 
                     message.AppendLine($"Ви успішно виправили дефект {update.CallbackQuery.Data} , так тримати, продовжуйте в цьому ж дусі)");
-
                     await _botClient.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, message.ToString(), ParseMode.Markdown);
                 }
                 else
                 {
-
                     await _botClient.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, "Помилка при пошуку даного дефекту...", ParseMode.Markdown);
                 }
             }
             catch(Exception ex)
             {
-
-                await _botClient.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, $"Помилка з дефектом {update.CallbackQuery.Data}...\n{ex.Message}", ParseMode.Markdown) ; 
-            }
-            
-            
-            
+                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, $"Помилка в FinishFixDefectState з дефектом {update.CallbackQuery.Data}...\n{ex.Message}", ParseMode.Markdown) ; 
+            }                                   
         }
     }
 }

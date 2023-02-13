@@ -1,4 +1,4 @@
-﻿using DefectTrackingInformationSystem.Commands;
+﻿using DefectTrackingInformationSystem.Constants;
 using DefectTrackingInformationSystem.Models;
 using DefectTrackingInformationSystem.Service.Interfaces;
 using DefectTrackingInformationSystem.Service;
@@ -24,29 +24,36 @@ namespace DefectTrackingInformationSystem.State
 
         public override async Task ExecuteStateAsync(Update update)
         {
-            var message = update.Message;
-            if (message.Text != null)
+            try
             {
-                uint numRoom;
-                if (uint.TryParse(message.Text, out numRoom))
+                var message = update.Message;
+                if (message.Text != null)
                 {
-                    defect.RoomNumber = numRoom;                   
+                    uint numRoom;
+                    if (uint.TryParse(message.Text, out numRoom))
+                    {
+                        defect.RoomNumber = numRoom;
 
-                    var messageText = "Опишіть проблему: ";
-                    await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
+                        var messageText = "Опишіть проблему: ";
+                        await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
+                    }
+                    else
+                    {
+                        var messageText = "Повторіть ще раз, ви надіслали не число. ";
+                        await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
+                    }
                 }
                 else
                 {
-                    var messageText = "Повторіть ще раз, ви надіслали не число. ";
+                    var messageText = "Повторіть ще раз, тут має бути текст. ";
                     await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
                 }
             }
-            else
+            catch(Exception ex)
             {
-
-                var messageText = "Повторіть ще раз, тут має бути текст. ";
+                var messageText = $"Помилка в InputNumberRoomState: \n{ex.Message}";
                 await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
-            }
+            }           
         }
     }
 }
