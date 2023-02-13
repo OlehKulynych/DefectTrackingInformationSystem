@@ -3801,23 +3801,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\kulin\\.nuget\\packages\\": {},
-    "D:\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\Andrii\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Projects\\.NET\\Intership\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem.csproj",
+      "projectUniqueName": "D:\\Important documents\\Important\\Programming\\Repository\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem.csproj",
       "projectName": "DefectTrackingInformationSystem",
-      "projectPath": "D:\\Projects\\.NET\\Intership\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem.csproj",
-      "packagesPath": "C:\\Users\\kulin\\.nuget\\packages\\",
-      "outputPath": "D:\\Projects\\.NET\\Intership\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem\\obj\\",
+      "projectPath": "D:\\Important documents\\Important\\Programming\\Repository\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem.csproj",
+      "packagesPath": "C:\\Users\\Andrii\\.nuget\\packages\\",
+      "outputPath": "D:\\Important documents\\Important\\Programming\\Repository\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "D:\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\kulin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Andrii\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -3826,7 +3828,6 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -3887,7 +3888,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
       }
     }
   }
