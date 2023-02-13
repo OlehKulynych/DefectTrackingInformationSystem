@@ -1,4 +1,4 @@
-﻿using DefectTrackingInformationSystem.Commands;
+﻿using DefectTrackingInformationSystem.Constants;
 using DefectTrackingInformationSystem.Service.Interfaces;
 using DefectTrackingInformationSystem.State;
 using Telegram.Bot.Types;
@@ -8,14 +8,13 @@ namespace DefectTrackingInformationSystem.Service
 {
     public class StateExecutorService : IStateExecutorService
     {
-        private StateMachine _stateMachine;
-        private List<DefectTrackingInformationSystem.State.State> _states;
-        private State.State _currentState;
+        private List<BaseState> _states;
+        private BaseState _currentState;
 
         public StateExecutorService(IServiceProvider serviceProvider)
         {
-            _states = serviceProvider.GetServices<DefectTrackingInformationSystem.State.State>().ToList();
-            _stateMachine = new StateMachine();
+            _states = serviceProvider.GetServices<BaseState>().ToList();
+            _states.AddRange(serviceProvider.GetServices<BaseDefectState>().ToList());
             
         }
 
@@ -28,19 +27,48 @@ namespace DefectTrackingInformationSystem.Service
 
             if (update.Type == UpdateType.Message)
             {
-
-                if (update.Message != null && update.Message.Text.Contains(CommandNames.StartCommand))
+                if(update.Message.Text != null)
                 {
-                    await ChangeStateAsync(CommandNames.StartCommand, update);
-                    return;
-                }
-
-                switch (update.Message?.Text)
-                {
-                    case "Повідомити про дефект":
-                        await ChangeStateAsync(CommandNames.InputDefectCommand, update);
+                    if (update.Message != null && update.Message.Text.Contains(CommandNames.StartCommand))
+                    {
+                        await ChangeStateAsync(CommandNames.StartCommand, update);
                         return;
+                    }
+
+                    switch (update.Message?.Text)
+                    {
+                        case "Повідомити про дефект":
+                            {
+                                await ChangeStateAsync(CommandNames.InputDefectCommand, update);
+                                return;
+                            }
+                        case "Переглянути наявні дефекти":
+                            {
+                                await ChangeStateAsync(CommandNames.GetDefectsCommand, update);
+                                return;
+                            }
+                        case "Виправити дефекти":
+                            {
+                                await ChangeStateAsync(CommandNames.FixDefectCommand, update);
+                                return;
+                            }
+                        case "Завантажити фото дефекту":
+                            {
+                                await ChangeStateAsync(CommandNames.StartInputImageDefectCommand, update);
+                                return;
+                            }
+                        case "Завершити":
+                            {
+                                if(_currentState?.Name == CommandNames.InputDecscriptionCommand || _currentState?.Name == CommandNames.InputImageDefectCommand)
+                                {
+
+                                    await ChangeStateAsync(CommandNames.FinishInputDefectCommand, update);
+                                }
+                                return;
+                            }
+                    }
                 }
+               
             }
 
             switch (_currentState?.Name)
@@ -56,6 +84,21 @@ namespace DefectTrackingInformationSystem.Service
                         await ChangeStateAsync(CommandNames.InputDecscriptionCommand, update);
                     }
                     break;
+                case CommandNames.StartInputImageDefectCommand:
+                    {
+                        await ChangeStateAsync(CommandNames.InputImageDefectCommand, update);
+                    }break;
+                case CommandNames.InputImageDefectCommand:
+                    {
+                        await ChangeStateAsync(CommandNames.FinishInputDefectCommand, update);
+                    }
+                    break;
+                case CommandNames.FixDefectCommand:
+                    {
+                        await ChangeStateAsync(CommandNames.FinishFixDefectCommand, update);
+                    }
+                    break;
+                    
                 case null:
                     {
                         await ChangeStateAsync(CommandNames.StartCommand, update);
