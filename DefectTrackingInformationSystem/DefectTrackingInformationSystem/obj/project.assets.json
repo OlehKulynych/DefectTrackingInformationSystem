@@ -1271,6 +1271,16 @@
             "related": ".pdb;.xml"
           }
         }
+      },
+      "DTIS.Shared/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/DTIS.Shared.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/DTIS.Shared.dll": {}
+        }
       }
     }
   },
@@ -2160,7 +2170,6 @@
       "path": "microsoft.netcore.targets/1.1.0",
       "files": [
         ".nupkg.metadata",
-        ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "lib/netstandard1.0/_._",
@@ -2572,7 +2581,6 @@
       "path": "system.globalization/4.3.0",
       "files": [
         ".nupkg.metadata",
-        ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "lib/MonoAndroid10/_._",
@@ -2661,7 +2669,6 @@
       "path": "system.io/4.3.0",
       "files": [
         ".nupkg.metadata",
-        ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "lib/MonoAndroid10/_._",
@@ -2830,7 +2837,6 @@
       "path": "system.reflection/4.3.0",
       "files": [
         ".nupkg.metadata",
-        ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "lib/MonoAndroid10/_._",
@@ -2911,7 +2917,6 @@
       "path": "system.reflection.primitives/4.3.0",
       "files": [
         ".nupkg.metadata",
-        ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "lib/MonoAndroid10/_._",
@@ -2968,7 +2973,6 @@
       "path": "system.resources.resourcemanager/4.3.0",
       "files": [
         ".nupkg.metadata",
-        ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "lib/MonoAndroid10/_._",
@@ -3025,7 +3029,6 @@
       "path": "system.runtime/4.3.0",
       "files": [
         ".nupkg.metadata",
-        ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "lib/MonoAndroid10/_._",
@@ -3440,7 +3443,6 @@
       "path": "system.text.encoding/4.3.0",
       "files": [
         ".nupkg.metadata",
-        ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "lib/MonoAndroid10/_._",
@@ -3651,7 +3653,6 @@
       "path": "system.threading.tasks/4.3.0",
       "files": [
         ".nupkg.metadata",
-        ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "lib/MonoAndroid10/_._",
@@ -3789,10 +3790,16 @@
         "telegram.bot.18.0.0.nupkg.sha512",
         "telegram.bot.nuspec"
       ]
+    },
+    "DTIS.Shared/1.0.0": {
+      "type": "project",
+      "path": "../DTIS.Shared/DTIS.Shared.csproj",
+      "msbuildProject": "../DTIS.Shared/DTIS.Shared.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net6.0": [
+      "DTIS.Shared >= 1.0.0",
       "Microsoft.EntityFrameworkCore >= 7.0.2",
       "Microsoft.EntityFrameworkCore.SqlServer >= 7.0.2",
       "Microsoft.EntityFrameworkCore.Tools >= 7.0.2",
@@ -3801,23 +3808,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\kulin\\.nuget\\packages\\": {},
-    "D:\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\Andrii\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Projects\\.NET\\Intership\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem.csproj",
+      "projectUniqueName": "D:\\Important documents\\Important\\Programming\\Repository\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem.csproj",
       "projectName": "DefectTrackingInformationSystem",
-      "projectPath": "D:\\Projects\\.NET\\Intership\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem.csproj",
-      "packagesPath": "C:\\Users\\kulin\\.nuget\\packages\\",
-      "outputPath": "D:\\Projects\\.NET\\Intership\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem\\obj\\",
+      "projectPath": "D:\\Important documents\\Important\\Programming\\Repository\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem.csproj",
+      "packagesPath": "C:\\Users\\Andrii\\.nuget\\packages\\",
+      "outputPath": "D:\\Important documents\\Important\\Programming\\Repository\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "D:\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\kulin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Andrii\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -3826,13 +3835,16 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "D:\\Important documents\\Important\\Programming\\Repository\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem\\DTIS.Shared\\DTIS.Shared.csproj": {
+              "projectPath": "D:\\Important documents\\Important\\Programming\\Repository\\DefectTrackingInformationSystem\\DefectTrackingInformationSystem\\DTIS.Shared\\DTIS.Shared.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
@@ -3887,7 +3899,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
       }
     }
   }
