@@ -26,4 +26,8 @@
     <PackageReference Include="Telegram.Bot" Version="18.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DTIS.Shared\DTIS.Shared.csproj" />
+  </ItemGroup>
+
 </Project>
