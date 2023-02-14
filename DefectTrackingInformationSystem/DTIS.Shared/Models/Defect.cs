@@ -1,6 +1,6 @@
 ﻿namespace DTIS.Shared.Models;
 
-internal class Defect
+public class Defect
 {
     public int Id { get; set; }
     public uint RoomNumber { get; set; }

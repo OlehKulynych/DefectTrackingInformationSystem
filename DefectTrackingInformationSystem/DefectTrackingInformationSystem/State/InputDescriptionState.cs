@@ -33,13 +33,13 @@ namespace DefectTrackingInformationSystem.State
                 else
                 {
                     var messageText = "Повторіть ще раз, тут має бути текст. ";
-                    await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
+                    await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown, replyMarkup: Keyboards.GetButtons());
                 }
             }
             catch(Exception ex)
             {
                 var messageText = $"Помилка в InputDescriptionState: \n{ex.Message}";
-                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
+                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown, replyMarkup: Keyboards.GetButtons());
             }           
         }
 
@@ -49,7 +49,8 @@ namespace DefectTrackingInformationSystem.State
             return new ReplyKeyboardMarkup
             (new List<List<KeyboardButton>> {
                     new List<KeyboardButton>{ new KeyboardButton("Завантажити фото дефекту") },
-                    new List<KeyboardButton>{new KeyboardButton("Завершити")}
+                    new List<KeyboardButton>{new KeyboardButton("Завершити")},
+                    new List<KeyboardButton>{new KeyboardButton("Перейти в меню")},
             });
 
         }
