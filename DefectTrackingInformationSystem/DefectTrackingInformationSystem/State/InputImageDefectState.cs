@@ -38,13 +38,13 @@ namespace DefectTrackingInformationSystem.State
                 }
                 else
                 {
-                    await _botClient.SendTextMessageAsync(update.Message.Chat.Id, "Ви надсилаєте не фото, можливо ви надсилаєте файлом?", ParseMode.Markdown);
+                    await _botClient.SendTextMessageAsync(update.Message.Chat.Id, "Ви надсилаєте не фото, можливо ви надсилаєте файлом?", ParseMode.Markdown, replyMarkup: Keyboards.GetButtons());
                 }
             }
             catch(Exception ex)
             {
                 var messageText = $"Помилка в InputImageDefectState: \n{ex.Message}";
-                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
+                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown, replyMarkup: Keyboards.GetButtons());
             }           
         }
 

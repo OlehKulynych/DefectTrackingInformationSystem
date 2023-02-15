@@ -6,7 +6,7 @@ namespace DefectTrackingInformationSystem.State
 {
     public abstract class BaseDefectState: BaseState
     {
-        protected static Defect defect = new Defect();
+        protected static DTIS.Shared.Models.Defect defect = new DTIS.Shared.Models.Defect();
 
     }
 }

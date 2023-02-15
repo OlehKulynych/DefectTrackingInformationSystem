@@ -40,12 +40,12 @@ namespace DefectTrackingInformationSystem.State
                 }
                 else
                 {
-                    await _botClient.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, "Помилка при пошуку даного дефекту...", ParseMode.Markdown);
+                    await _botClient.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, "Помилка при пошуку даного дефекту...", ParseMode.Markdown, replyMarkup: Keyboards.GetButtons());
                 }
             }
             catch(Exception ex)
             {
-                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, $"Помилка в FinishFixDefectState з дефектом {update.CallbackQuery.Data}...\n{ex.Message}", ParseMode.Markdown) ; 
+                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, $"Помилка в FinishFixDefectState з дефектом {update.CallbackQuery.Data}...\n{ex.Message}", ParseMode.Markdown, replyMarkup: Keyboards.GetButtons()) ; 
             }                                   
         }
     }

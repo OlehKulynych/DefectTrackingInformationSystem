@@ -35,24 +35,24 @@ namespace DefectTrackingInformationSystem.State
                         defect.RoomNumber = numRoom;
 
                         var messageText = "Опишіть проблему: ";
-                        await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
+                        await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown, replyMarkup: Keyboards.GetButtons());
                     }
                     else
                     {
                         var messageText = "Повторіть ще раз, ви надіслали не число. ";
-                        await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
+                        await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown, replyMarkup: Keyboards.GetButtons());
                     }
                 }
                 else
                 {
                     var messageText = "Повторіть ще раз, тут має бути текст. ";
-                    await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
+                    await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown, replyMarkup: Keyboards.GetButtons());
                 }
             }
             catch(Exception ex)
             {
                 var messageText = $"Помилка в InputNumberRoomState: \n{ex.Message}";
-                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
+                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown, replyMarkup: Keyboards.GetButtons());
             }           
         }
     }

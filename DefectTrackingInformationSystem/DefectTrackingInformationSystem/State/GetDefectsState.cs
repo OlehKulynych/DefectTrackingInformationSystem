@@ -80,7 +80,7 @@ namespace DefectTrackingInformationSystem.State
             catch (Exception ex)
             {
                 var messageText = $"Помилка в GetDefectsState: \n{ex.Message}";
-                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
+                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown, replyMarkup: Keyboards.GetButtons());
             }
                         
         }

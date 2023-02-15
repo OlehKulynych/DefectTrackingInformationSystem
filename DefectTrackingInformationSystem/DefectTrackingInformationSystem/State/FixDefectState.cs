@@ -54,7 +54,7 @@ namespace DefectTrackingInformationSystem.State
                         }
                         else
                         {
-                            await _botClient.SendTextMessageAsync(update.Message.Chat.Id, "Немає наявних дефектів, можна відпочити)))", ParseMode.Markdown);
+                            await _botClient.SendTextMessageAsync(update.Message.Chat.Id, "Немає наявних дефектів, можна відпочити)))", ParseMode.Markdown, replyMarkup: Keyboards.GetButtons());
                         }
                     }
                     else
@@ -70,7 +70,7 @@ namespace DefectTrackingInformationSystem.State
             catch(Exception ex)
             {
                 var messageText = $"Помилка в FixDefectState: \n{ex.Message}";
-                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
+                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown, replyMarkup: Keyboards.GetButtons());
             }
 
             

@@ -97,5 +97,22 @@ namespace DefectTrackingInformationSystem.Service
             var roles = await GetRolesAsync(user);
             return roles.Contains(roleName);
         }
+
+
+        public async Task<IList<User>> GetUsersInRoleAsync(string roleName)
+        {
+            if (roleName == null)
+            {
+                throw new ArgumentNullException(nameof(roleName));
+            }
+            var roleDb = await _context.Roles.Include(r => r.Users).SingleOrDefaultAsync(r => r.Name == roleName);
+            if (roleDb != null)
+            {
+                var users = roleDb.Users.ToList();
+
+                return users;
+            }
+            return null;
+        }
     }
 }

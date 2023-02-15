@@ -54,7 +54,11 @@ namespace DefectTrackingInformationSystem.Service
                             }
                         case "Завантажити фото дефекту":
                             {
-                                await ChangeStateAsync(CommandNames.StartInputImageDefectCommand, update);
+                                if (_currentState?.Name == CommandNames.InputDecscriptionCommand)
+                                {
+
+                                    await ChangeStateAsync(CommandNames.StartInputImageDefectCommand, update);
+                                }
                                 return;
                             }
                         case "Завершити":
@@ -64,6 +68,11 @@ namespace DefectTrackingInformationSystem.Service
 
                                     await ChangeStateAsync(CommandNames.FinishInputDefectCommand, update);
                                 }
+                                return;
+                            }
+                        case "Перейти в меню":
+                            {
+                                await ChangeStateAsync(CommandNames.StartCommand, update);
                                 return;
                             }
                     }
@@ -93,7 +102,13 @@ namespace DefectTrackingInformationSystem.Service
                         await ChangeStateAsync(CommandNames.FinishInputDefectCommand, update);
                     }
                     break;
+
                 case CommandNames.FixDefectCommand:
+                    {
+                        await ChangeStateAsync(CommandNames.FinishFixDefectCommand, update);
+                    }
+                    break;
+                case CommandNames.FinishFixDefectCommand:
                     {
                         await ChangeStateAsync(CommandNames.FinishFixDefectCommand, update);
                     }
