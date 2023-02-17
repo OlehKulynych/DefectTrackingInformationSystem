@@ -31,7 +31,7 @@ namespace DefectTrackingInformationSystem.State
                 {
                     if (await _userService.IsInRoleAsync(user, RoleNames.TechnicalStaff))
                     {
-                        const string message = "Для додавання нового дефекту введіть потрібну інформацію в такому вигляді : \n\nНомер кімнати з дефектом: ";
+                        const string message = "Введіть номер кімнати з дефектом (число): ";
                         await _botClient.SendTextMessageAsync(update.Message.Chat.Id, message, ParseMode.Markdown, replyMarkup: Keyboards.GetButtons());
                     }
                     else

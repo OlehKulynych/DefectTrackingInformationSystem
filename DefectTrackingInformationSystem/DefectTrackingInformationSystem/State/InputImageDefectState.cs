@@ -23,8 +23,7 @@ namespace DefectTrackingInformationSystem.State
 
         public override async Task ExecuteStateAsync(Update update)
         {
-            try
-            {
+
                 var message = update.Message;
                 if (message.Photo != null)
                 {
@@ -39,13 +38,9 @@ namespace DefectTrackingInformationSystem.State
                 else
                 {
                     await _botClient.SendTextMessageAsync(update.Message.Chat.Id, "Ви надсилаєте не фото, можливо ви надсилаєте файлом?", ParseMode.Markdown, replyMarkup: Keyboards.GetButtons());
+                    throw new Exception();
                 }
-            }
-            catch(Exception ex)
-            {
-                var messageText = $"Помилка в InputImageDefectState: \n{ex.Message}";
-                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown, replyMarkup: Keyboards.GetButtons());
-            }           
+                    
         }
 
         public IReplyMarkup GetButtons()

@@ -48,23 +48,27 @@ namespace DefectTrackingInformationSystem.State
 
                         foreach (var el in defects)
                         {
-                            message.AppendLine($" ----- \n Id: {el.Id} \n Номер кімнати: {el.RoomNumber} \n Опис: {el.Description}");
-                            if (el.ImageString != null)
+                            if(el.isClosed == false)
                             {
-                                var directory = new DirectoryInfo(
-                                Directory.GetCurrentDirectory());
-
-                                var imagePath = Path.Combine(directory.Parent.FullName, $"{el.ImageString}");
-                                using (var stream = System.IO.File.OpenRead(imagePath))
+                                message.AppendLine($" ----- \n Id: {el.Id} \n Номер кімнати: {el.RoomNumber} \n Опис: {el.Description}");
+                                if (el.ImageString != null)
                                 {
-                                   await _botClient.SendPhotoAsync(update.Message.Chat.Id, new Telegram.Bot.Types.InputFiles.InputOnlineFile(stream), caption: message.ToString(), ParseMode.Markdown);
+                                    var directory = new DirectoryInfo(
+                                    Directory.GetCurrentDirectory());
+
+                                    var imagePath = Path.Combine(directory.Parent.FullName, $"{el.ImageString}");
+                                    using (var stream = System.IO.File.OpenRead(imagePath))
+                                    {
+                                        await _botClient.SendPhotoAsync(update.Message.Chat.Id, new Telegram.Bot.Types.InputFiles.InputOnlineFile(stream), caption: message.ToString(), ParseMode.Markdown);
+                                    }
                                 }
+                                else
+                                {
+                                    await _botClient.SendTextMessageAsync(update.Message.Chat.Id, message.ToString(), ParseMode.Markdown);
+                                }
+                                message.Clear();
                             }
-                            else
-                            {
-                                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, message.ToString(), ParseMode.Markdown);
-                            }
-                            message.Clear();
+                            
                         }
                     }
                     else

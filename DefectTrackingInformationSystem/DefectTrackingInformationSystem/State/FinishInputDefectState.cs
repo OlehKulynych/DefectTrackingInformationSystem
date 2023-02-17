@@ -42,7 +42,7 @@ namespace DefectTrackingInformationSystem.State
                 await _dataBaseContext.SaveChangesAsync();
 
                 var messageText = "Успішне додавання...";
-                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
+                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown,replyMarkup:Keyboards.GetButtons());
 
                 var users = await _userService.GetUsersInRoleAsync(RoleNames.RepairEmployee);
 
