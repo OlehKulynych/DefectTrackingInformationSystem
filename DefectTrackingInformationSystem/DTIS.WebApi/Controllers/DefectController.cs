@@ -1,6 +1,7 @@
 ﻿using DTIS.Shared.Models;
 using DTIS.WebApi.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace DTIS.WebApi.Controllers;
 
@@ -9,15 +10,17 @@ namespace DTIS.WebApi.Controllers;
 public class DefectController : ControllerBase
 {
     private readonly IDefectRepository _defectRepository;
+    private readonly IWebHostEnvironment _webHostEnvironment;
 
-    public DefectController(IDefectRepository defectRepository) 
+    public DefectController(IDefectRepository defectRepository, IWebHostEnvironment webHostEnvironment)
     {
         _defectRepository = defectRepository;
+        _webHostEnvironment = webHostEnvironment;
     }
 
     [HttpGet]
     public async Task<ActionResult<List<Defect>>> GetAllDefects()
-    { 
+    {
         return Ok(await _defectRepository.GetAllDefects());
     }
 
@@ -26,7 +29,7 @@ public class DefectController : ControllerBase
     {
         var defect = await _defectRepository.GetDefectById(id);
 
-        if(defect == null)
+        if (defect == null)
         {
             return NotFound();
         }
@@ -35,9 +38,23 @@ public class DefectController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddDefect(Defect defect)
+    public async Task<IActionResult> AddDefect([FromForm]Defect defect)
     {
-        return Ok(await _defectRepository.AddDefect(defect));
+        if(defect.File != null)
+        {
+            var addedPhoto = UploadPhoto(defect.File);
+
+            if(String.IsNullOrEmpty(addedPhoto))
+            {
+                return BadRequest();
+            }
+
+            defect.ImageString = addedPhoto;
+        }
+
+        await _defectRepository.AddDefect(defect);
+
+        return Ok();
     }
 
     [HttpPut]
@@ -45,7 +62,7 @@ public class DefectController : ControllerBase
     {
         var updateDefect = await _defectRepository.GetDefectById(defect.Id);
 
-        if(updateDefect == null)
+        if (updateDefect == null)
         {
             return NotFound();
         }
@@ -65,11 +82,52 @@ public class DefectController : ControllerBase
     {
         var deleted = await _defectRepository.DeleteDefect(id);
 
-        if(deleted)
+        if (deleted)
         {
             return NoContent();
         }
 
         return NotFound();
+    }
+
+    private string? UploadPhoto(IFormFile photo)
+    {
+        var extensionPhoto = new string[] { ".jpg", ".jpeg", ".png", ".svg" };
+        var resultPath = string.Empty;
+
+        try
+        {
+            if (photo.Length > 0)
+            {
+                var path = _webHostEnvironment.WebRootPath;
+                var projectPath = Directory.GetCurrentDirectory();
+                path = Path.GetFullPath(Path.Combine(projectPath, @"..\")) + "\\photos\\";
+
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                using (FileStream fileStream = System.IO.File.Create(path + photo.FileName))
+                {
+                    var extension = Path.GetExtension(path + photo.FileName);
+
+                    if (extension == null || !extensionPhoto.Contains(extension))
+                    {
+                        return null;
+                    }
+
+                    resultPath = path + photo.FileName;
+                    photo.CopyTo(fileStream);
+                    fileStream.Flush();
+                }
+            }
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+
+        return resultPath;
     }
 }
