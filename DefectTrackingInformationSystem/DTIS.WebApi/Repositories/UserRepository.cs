@@ -16,7 +16,9 @@ public class UserRepository : IUserRepository
 
     public async Task<List<User>> GetAllUsers()
     {
-        return await _context.Users.ToListAsync();
+        return await _context.Users
+            .Include(x => x.Role)
+            .ToListAsync();
     }
 
     public async Task<bool> CreateUserAsync(User user)

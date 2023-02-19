@@ -16,11 +16,15 @@ public class AuthController : ControllerBase
 {
     private readonly IConfiguration _configuration;
     private readonly IUserRepository _userRepository;
+    private readonly IRoleRepository _roleRepository;
 
-    public AuthController(IConfiguration configuration, IUserRepository userRepository)
+    public AuthController(IConfiguration configuration, 
+        IUserRepository userRepository, 
+        IRoleRepository roleRepository)
     {
         _configuration = configuration;
         _userRepository = userRepository;
+        _roleRepository = roleRepository;
     }
 
     [HttpPost("register")]
@@ -28,6 +32,7 @@ public class AuthController : ControllerBase
     public async Task<ActionResult> RegisterAsync(RegisterUserDTO registerUserDTO)
     {
         var oldUser = await _userRepository.GetUserByEmailAsync(registerUserDTO.Email);
+        var defaultRole = await _roleRepository.GetRoleByNameAsync("None");
 
         if (oldUser != null)
         {
@@ -40,6 +45,7 @@ public class AuthController : ControllerBase
         user.Email = registerUserDTO.Email;
         user.FirstName = registerUserDTO.FirstName;
         user.LastName = registerUserDTO.LastName;
+        user.Role = defaultRole;
         user.ChatId = registerUserDTO.ChatId;
         user.PasswordHash = passwordHash;
 
@@ -79,7 +85,10 @@ public class AuthController : ControllerBase
     {
         List<Claim> claims = new List<Claim>
         {
-            new Claim (ClaimTypes.Email, user.Email)
+            new Claim (ClaimTypes.Email, user.Email),
+            new Claim (ClaimTypes.Role, user.Role!.Name),
+            new Claim (ClaimTypes.Name, user.FirstName),
+            new Claim (ClaimTypes.Surname, user.LastName),
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:SecretKey").Value!));
