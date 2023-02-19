@@ -1,0 +1,26 @@
+<h2>Список користувачів</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Прізвище</th>
+      <th>Ім'я</th>
+      <th>Опції</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of users">
+      <td>{{ user.id }}</td>
+      <td>
+        <input [(ngModel)]="user.lastname">
+      </td>
+      <td>
+        <input [(ngModel)]="user.firstname">
+      </td>
+      <td>
+        <button (click)="saveUser(user)">Зберегти</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
