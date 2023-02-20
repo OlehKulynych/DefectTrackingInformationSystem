@@ -1,4 +1,5 @@
 ﻿using DTIS.Shared.DTO;
+using DTIS.Shared.Models;
 using DTIS.WebApi.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ namespace DTIS.WebApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Roles = "Administrator")]
 public class UserController : ControllerBase
 {
     private readonly IUserRepository _userRepository;
@@ -19,10 +21,9 @@ public class UserController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = "Administrator")]
-    public async Task<ActionResult<UserDTO>> GetAllUsers()
+    public async Task<ActionResult<List<User>>> GetAllUsers()
     {
-        var users = await _userRepository.GetAllUsers();
+        var users = await _userRepository.GetAllUsersAsync();
 
         var result = users.Select(x => new UserDTO
         {
@@ -38,12 +39,37 @@ public class UserController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("role")]
-    [Authorize(Roles = "Administrator")]
-    public async Task<ActionResult<UserDTO>> GetAllRoles()
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<User>> GetUserById(int id)
     {
-        var roles = await _roleRepository.GetAllRoles();
+        var user = await _userRepository.GetUserByIdAsync(id);
+
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(user);
+    }
+
+    [HttpGet("role")]
+    public async Task<ActionResult<List<Role>>> GetAllRoles()
+    {
+        var roles = await _roleRepository.GetAllRolesAsync();
 
         return Ok(roles);
+    }
+
+    [HttpGet("role/{id:int}")]
+    public async Task<ActionResult<Role>> GetRoleById(int id)
+    {
+        var role = await _roleRepository.GetRoleByIdAsync(id);
+
+        if (role == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(role);
     }
 }

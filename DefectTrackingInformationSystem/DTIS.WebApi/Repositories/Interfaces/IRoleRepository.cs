@@ -4,7 +4,7 @@ namespace DTIS.WebApi.Repositories.Interfaces;
 
 public interface IRoleRepository
 {
-    Task<List<Role>> GetAllRoles();
+    Task<List<Role>> GetAllRolesAsync();
     Task<bool> CreateRoleAsync(Role role);
     Task<bool> UpdateAsync(Role role);
     Task<bool> DeleteAsync(Role role);

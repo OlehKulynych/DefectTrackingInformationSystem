@@ -1,7 +1,7 @@
 ﻿using DTIS.Shared.Models;
 using DTIS.WebApi.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace DTIS.WebApi.Controllers;
 
@@ -19,15 +19,16 @@ public class DefectController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "Administrator, TechnicalWorker, RepairServiceEmployee")]
     public async Task<ActionResult<List<Defect>>> GetAllDefects()
     {
-        return Ok(await _defectRepository.GetAllDefects());
+        return Ok(await _defectRepository.GetAllDefectsAsync());
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Defect>> GetDefectById(int id)
     {
-        var defect = await _defectRepository.GetDefectById(id);
+        var defect = await _defectRepository.GetDefectByIdAsync(id);
 
         if (defect == null)
         {
@@ -38,13 +39,14 @@ public class DefectController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Administrator, TechnicalWorker")]
     public async Task<IActionResult> AddDefect([FromForm]Defect defect)
     {
         if(defect.File != null)
         {
             var addedPhoto = UploadPhoto(defect.File);
 
-            if(String.IsNullOrEmpty(addedPhoto))
+            if(string.IsNullOrEmpty(addedPhoto))
             {
                 return BadRequest();
             }
@@ -52,15 +54,16 @@ public class DefectController : ControllerBase
             defect.ImageString = addedPhoto;
         }
 
-        await _defectRepository.AddDefect(defect);
+        await _defectRepository.AddDefectAsync(defect);
 
         return Ok();
     }
 
     [HttpPut]
+    [Authorize(Roles = "Administrator, TechnicalWorker")]
     public async Task<IActionResult> UpdateDefect(Defect defect)
     {
-        var updateDefect = await _defectRepository.GetDefectById(defect.Id);
+        var updateDefect = await _defectRepository.GetDefectByIdAsync(defect.Id);
 
         if (updateDefect == null)
         {
@@ -72,15 +75,16 @@ public class DefectController : ControllerBase
         updateDefect.ImageString = defect.ImageString;
         updateDefect.isClosed = defect.isClosed;
 
-        await _defectRepository.UpdateDefect(updateDefect);
+        await _defectRepository.UpdateDefectAsync(updateDefect);
 
         return Ok();
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Administrator")]
     public async Task<IActionResult> DeleteDefect(int id)
     {
-        var deleted = await _defectRepository.DeleteDefect(id);
+        var deleted = await _defectRepository.DeleteDefectAsync(id);
 
         if (deleted)
         {
@@ -88,6 +92,31 @@ public class DefectController : ControllerBase
         }
 
         return NotFound();
+    }
+
+    [HttpPost("{id}")]
+    [Authorize(Roles = "Administrator, RepairServiceEmployee")]
+    public async Task<IActionResult> CloseDefect(int id)
+    {
+        var defect = await _defectRepository.GetDefectByIdAsync(id);
+
+        if (defect == null)
+        {
+            return NotFound();
+        }
+
+        try
+        {
+            var isClosed = await _defectRepository.IsClosedDefectAsync(id);
+        }
+        catch (Exception)
+        {
+            return BadRequest("Already closed.");
+        }
+
+        await _defectRepository.CloseDefectAsync(id);
+
+        return Ok();
     }
 
     private string? UploadPhoto(IFormFile photo)

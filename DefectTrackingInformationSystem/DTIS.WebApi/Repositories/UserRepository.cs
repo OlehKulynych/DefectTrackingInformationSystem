@@ -14,7 +14,7 @@ public class UserRepository : IUserRepository
         _context = context;
     }
 
-    public async Task<List<User>> GetAllUsers()
+    public async Task<List<User>> GetAllUsersAsync()
     {
         return await _context.Users
             .Include(x => x.Role)
@@ -67,10 +67,45 @@ public class UserRepository : IUserRepository
         }
     }
 
+    public async Task<User?> GetUserByIdAsync(int id)
+    {
+        return await _context.Users
+            .Include(x => x.Role)
+            .SingleOrDefaultAsync(r => r.Id == id);
+    }
+
     public async Task<User?> GetUserByEmailAsync(string email)
     {
         return await _context.Users
             .Include(x => x.Role)
             .SingleOrDefaultAsync(u => u.Email == email);
+    }
+
+    public async Task<bool> IsActivatedUserAsync(int id)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (user == null)
+        {
+            throw new NullReferenceException();
+        }
+
+        return user.IsActivated;
+    }
+
+    public async Task<bool> ActivateUserAsync(int id)
+    {
+        var user = await GetUserByIdAsync(id);
+
+        if (user == null)
+        {
+            return false;
+        }
+
+        user.IsActivated = true;
+
+        var closed = await _context.SaveChangesAsync();
+
+        return closed > 0;
     }
 }

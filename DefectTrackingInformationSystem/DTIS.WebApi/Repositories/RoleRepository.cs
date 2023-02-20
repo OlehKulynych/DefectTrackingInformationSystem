@@ -14,7 +14,7 @@ public class RoleRepository : IRoleRepository
         _context = context;
     }
 
-    public async Task<List<Role>> GetAllRoles()
+    public async Task<List<Role>> GetAllRolesAsync()
     {
         return await _context.Roles.ToListAsync();
     }
@@ -71,9 +71,9 @@ public class RoleRepository : IRoleRepository
         }
     }
 
-    public async Task<Role?> GetRoleByIdAsync(int roleId)
+    public async Task<Role?> GetRoleByIdAsync(int id)
     {
-        return await _context.Roles.SingleOrDefaultAsync(r => r.Id == roleId);
+        return await _context.Roles.SingleOrDefaultAsync(r => r.Id == id);
     }
 
     public async Task<Role?> GetRoleByNameAsync(string roleName)
