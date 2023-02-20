@@ -75,6 +75,13 @@ public class AuthController : ControllerBase
             return BadRequest("Wrong password.");
         }
 
+        if (user.Role == null 
+            || user.Role == await _roleRepository.GetRoleByNameAsync("None") 
+            || user.IsActivated == false)
+        {
+            return BadRequest("Account not activated.");
+        }
+
         var token = CreateToken(user);
 
         return Ok(token);

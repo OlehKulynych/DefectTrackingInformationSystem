@@ -12,4 +12,6 @@ public interface IUserRepository
     Task<User?> GetUserByEmailAsync(string email);
     Task<bool> IsActivatedUserAsync(int id);
     Task<bool> ActivateUserAsync(int id);
+    Task<bool> DeActivateUserAsync(int id);
+    Task<bool> SetUserRole(User user, Role role);
 }

@@ -87,7 +87,7 @@ public class UserRepository : IUserRepository
 
         if (user == null)
         {
-            throw new NullReferenceException();
+            throw new Exception();
         }
 
         return user.IsActivated;
@@ -107,5 +107,37 @@ public class UserRepository : IUserRepository
         var closed = await _context.SaveChangesAsync();
 
         return closed > 0;
+    }
+
+    public async Task<bool> DeActivateUserAsync(int id)
+    {
+        var user = await GetUserByIdAsync(id);
+
+        if (user == null)
+        {
+            return false;
+        }
+
+        user.IsActivated = false;
+
+        var closed = await _context.SaveChangesAsync();
+
+        return closed > 0;
+    }
+
+    public async Task<bool> SetUserRole(User user, Role role)
+    {
+        var userInDB = await GetUserByIdAsync(user.Id);
+        var roleInDB = await _context.Roles.FirstOrDefaultAsync(x => x.Id == role.Id);
+
+        if (user == null || role == null || userInDB == null || roleInDB == null)
+        {
+            return false;
+        }
+
+        userInDB.Role = roleInDB;
+        var result = await _context.SaveChangesAsync();
+
+        return result > 0;
     }
 }

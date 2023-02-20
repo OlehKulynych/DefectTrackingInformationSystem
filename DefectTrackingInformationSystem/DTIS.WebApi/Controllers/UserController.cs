@@ -1,5 +1,6 @@
 ﻿using DTIS.Shared.DTO;
 using DTIS.Shared.Models;
+using DTIS.WebApi.Repositories;
 using DTIS.WebApi.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -71,5 +72,61 @@ public class UserController : ControllerBase
         }
 
         return Ok(role);
+    }
+
+    [HttpPost("setrole/{userId:int}/{roleId:int}")]
+    public async Task<IActionResult> SetUserRole(int userId, int roleId)
+    {
+        var user = await _userRepository.GetUserByIdAsync(userId);
+        var role = await _roleRepository.GetRoleByIdAsync(roleId);
+
+        if (user == null || role == null)
+        {
+            return NotFound();
+        }
+
+        await _userRepository.SetUserRole(user, role);
+
+        return Ok();
+    }
+
+    [HttpPost("activateuser/{id:int}")]
+    public async Task<IActionResult> ActivateUser(int id)
+    {
+        var user = await _userRepository.GetUserByIdAsync(id);
+
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        if (user.Role == null || user.Role == await _roleRepository.GetRoleByNameAsync("None"))
+        {
+            return BadRequest("No role selected.");
+        }
+
+        await _userRepository.ActivateUserAsync(user.Id);
+
+        return Ok();
+    }
+
+    [HttpPost("deactivateuser/{id:int}")]
+    public async Task<IActionResult> DeActivateUser(int id)
+    {
+        var user = await _userRepository.GetUserByIdAsync(id);
+
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        if (user.Role == null || user.Role == await _roleRepository.GetRoleByNameAsync("None"))
+        {
+            return BadRequest("No role selected.");
+        }
+
+        await _userRepository.DeActivateUserAsync(user.Id);
+
+        return Ok();
     }
 }

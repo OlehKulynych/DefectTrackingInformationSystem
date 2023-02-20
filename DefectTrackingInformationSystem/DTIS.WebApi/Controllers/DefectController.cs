@@ -26,6 +26,7 @@ public class DefectController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize(Roles = "Administrator, TechnicalWorker, RepairServiceEmployee")]
     public async Task<ActionResult<Defect>> GetDefectById(int id)
     {
         var defect = await _defectRepository.GetDefectByIdAsync(id);
@@ -94,7 +95,7 @@ public class DefectController : ControllerBase
         return NotFound();
     }
 
-    [HttpPost("{id}")]
+    [HttpPost("close/{id}")]
     [Authorize(Roles = "Administrator, RepairServiceEmployee")]
     public async Task<IActionResult> CloseDefect(int id)
     {
@@ -103,15 +104,6 @@ public class DefectController : ControllerBase
         if (defect == null)
         {
             return NotFound();
-        }
-
-        try
-        {
-            var isClosed = await _defectRepository.IsClosedDefectAsync(id);
-        }
-        catch (Exception)
-        {
-            return BadRequest("Already closed.");
         }
 
         await _defectRepository.CloseDefectAsync(id);
