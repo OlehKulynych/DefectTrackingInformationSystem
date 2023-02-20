@@ -69,6 +69,8 @@ public class UserRepository : IUserRepository
 
     public async Task<User?> GetUserByEmailAsync(string email)
     {
-        return await _context.Users.SingleOrDefaultAsync(u => u.Email == email);
+        return await _context.Users
+            .Include(x => x.Role)
+            .SingleOrDefaultAsync(u => u.Email == email);
     }
 }
