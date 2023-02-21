@@ -62,7 +62,7 @@ public class DefectController : ControllerBase
 
     [HttpPut]
     [Authorize(Roles = "Administrator, TechnicalWorker")]
-    public async Task<IActionResult> UpdateDefect(Defect defect)
+    public async Task<IActionResult> UpdateDefect([FromForm]Defect defect)
     {
         var updateDefect = await _defectRepository.GetDefectByIdAsync(defect.Id);
 

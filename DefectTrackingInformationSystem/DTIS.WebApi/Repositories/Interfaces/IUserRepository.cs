@@ -14,4 +14,5 @@ public interface IUserRepository
     Task<bool> ActivateUserAsync(int id);
     Task<bool> DeActivateUserAsync(int id);
     Task<bool> SetUserRole(User user, Role role);
+    Task<bool> IsUserExistAsync(int id);
 }

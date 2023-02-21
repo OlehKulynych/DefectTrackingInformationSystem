@@ -140,4 +140,12 @@ public class UserRepository : IUserRepository
 
         return result > 0;
     }
+
+    public async Task<bool> IsUserExistAsync(int id)
+    {
+        var users = _context.Users.Where(x => x.Id == id).AsNoTracking();
+        var user = await users.FirstOrDefaultAsync(x => x.Id == id);
+
+        return user != null;
+    }
 }

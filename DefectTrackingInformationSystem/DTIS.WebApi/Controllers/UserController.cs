@@ -61,6 +61,51 @@ public class UserController : ControllerBase
         return Ok(roles);
     }
 
+    [HttpPut]
+    public async Task<IActionResult> UpdateUser(UserDTO userDTO)
+    {
+        var isUserExist = await _userRepository.IsUserExistAsync(userDTO.Id);
+
+        if (isUserExist == false)
+        {
+            return NotFound();
+        }
+
+        var updateUser = new User();
+
+        updateUser.Id = userDTO.Id;
+        updateUser.Email = userDTO.Email;
+        updateUser.FirstName = userDTO.FirstName;
+        updateUser.LastName = userDTO.LastName;
+        updateUser.Role = userDTO.Role;
+        updateUser.IsActivated = userDTO.IsActivated;
+        updateUser.ChatId = userDTO.ChatId;
+
+        await _userRepository.UpdateUserAsync(updateUser);
+
+        return Ok();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteUser(int id)
+    {
+        var user = await _userRepository.GetUserByIdAsync(id);
+
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        var deleted = await _userRepository.DeleteUserAsync(user);
+
+        if (deleted)
+        {
+            return NoContent();
+        }
+
+        return NotFound();
+    }
+
     [HttpGet("role/{id:int}")]
     public async Task<ActionResult<Role>> GetRoleById(int id)
     {
