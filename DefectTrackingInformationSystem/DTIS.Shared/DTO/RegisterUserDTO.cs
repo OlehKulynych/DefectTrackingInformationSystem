@@ -1,5 +1,4 @@
-﻿using DTIS.Shared.Models;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace DTIS.Shared.DTO;
