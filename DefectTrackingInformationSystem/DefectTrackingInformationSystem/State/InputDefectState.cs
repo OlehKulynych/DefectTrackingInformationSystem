@@ -29,10 +29,10 @@ namespace DefectTrackingInformationSystem.State
                 var user = await _userService.GetUserAsync(update);
                 if (user != null)
                 {
-                    if (await _userService.IsInRoleAsync(user, RoleNames.RepairEmployee))
+                    if (await _userService.IsInRoleAsync(user, RoleNames.TechnicalStaff))
                     {
-                        const string message = "Для додавання нового дефекту введіть потрібну інформацію в такому вигляді : \n\nНомер кімнати з дефектом: ";
-                        await _botClient.SendTextMessageAsync(update.Message.Chat.Id, message, ParseMode.Markdown);
+                        const string message = "Введіть номер кімнати з дефектом (число): ";
+                        await _botClient.SendTextMessageAsync(update.Message.Chat.Id, message, ParseMode.Markdown, replyMarkup: Keyboards.GetButtons());
                     }
                     else
                     {
@@ -47,7 +47,7 @@ namespace DefectTrackingInformationSystem.State
             catch(Exception ex)
             {
                 var messageText = $"Помилка в InputDefectState: \n{ex.Message}";
-                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
+                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown, replyMarkup: Keyboards.GetButtons());
             }
         }
     }

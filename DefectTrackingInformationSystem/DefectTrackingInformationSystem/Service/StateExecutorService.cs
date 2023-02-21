@@ -10,6 +10,7 @@ namespace DefectTrackingInformationSystem.Service
     {
         private List<BaseState> _states;
         private BaseState _currentState;
+        private BaseState _previosState;
 
         public StateExecutorService(IServiceProvider serviceProvider)
         {
@@ -54,7 +55,11 @@ namespace DefectTrackingInformationSystem.Service
                             }
                         case "Завантажити фото дефекту":
                             {
-                                await ChangeStateAsync(CommandNames.StartInputImageDefectCommand, update);
+                                if (_currentState?.Name == CommandNames.InputDecscriptionCommand)
+                                {
+
+                                    await ChangeStateAsync(CommandNames.StartInputImageDefectCommand, update);
+                                }
                                 return;
                             }
                         case "Завершити":
@@ -66,50 +71,71 @@ namespace DefectTrackingInformationSystem.Service
                                 }
                                 return;
                             }
+                        case "Перейти в меню":
+                            {
+                                await ChangeStateAsync(CommandNames.StartCommand, update);
+                                return;
+                            }
                     }
                 }
                
             }
 
-            switch (_currentState?.Name)
+            try
             {
+                switch (_currentState?.Name)
+                {
 
-                case CommandNames.InputDefectCommand:
-                    {
-                        await ChangeStateAsync(CommandNames.InputNumberRoomsCommand, update);
+                    case CommandNames.InputDefectCommand:
+                        {
+                            await ChangeStateAsync(CommandNames.InputNumberRoomsCommand, update);
+                            break;
+                        }
+                    case CommandNames.InputNumberRoomsCommand:
+                        {
+                            await ChangeStateAsync(CommandNames.InputDecscriptionCommand, update);
+                        }
                         break;
-                    }
-                case CommandNames.InputNumberRoomsCommand:
-                    {
-                        await ChangeStateAsync(CommandNames.InputDecscriptionCommand, update);
-                    }
-                    break;
-                case CommandNames.StartInputImageDefectCommand:
-                    {
-                        await ChangeStateAsync(CommandNames.InputImageDefectCommand, update);
-                    }break;
-                case CommandNames.InputImageDefectCommand:
-                    {
-                        await ChangeStateAsync(CommandNames.FinishInputDefectCommand, update);
-                    }
-                    break;
-                case CommandNames.FixDefectCommand:
-                    {
-                        await ChangeStateAsync(CommandNames.FinishFixDefectCommand, update);
-                    }
-                    break;
-                    
-                case null:
-                    {
-                        await ChangeStateAsync(CommandNames.StartCommand, update);
+                    case CommandNames.StartInputImageDefectCommand:
+                        {
+                            await ChangeStateAsync(CommandNames.InputImageDefectCommand, update);
+                        }
                         break;
-                    }
+                    case CommandNames.InputImageDefectCommand:
+                        {
+                            await ChangeStateAsync(CommandNames.FinishInputDefectCommand, update);
+                        }
+                        break;
+
+                    case CommandNames.FixDefectCommand:
+                        {
+                            await ChangeStateAsync(CommandNames.FinishFixDefectCommand, update);
+                        }
+                        break;
+                    case CommandNames.FinishFixDefectCommand:
+                        {
+                            await ChangeStateAsync(CommandNames.FinishFixDefectCommand, update);
+                        }
+                        break;
+
+                    case null:
+                        {
+                            await ChangeStateAsync(CommandNames.StartCommand, update);
+                            break;
+                        }
+                }
             }
+            catch(Exception ex)
+            {
+                await ChangeStateAsync(_previosState.Name, update);
+            }
+            
 
         }
 
         private async Task ChangeStateAsync(string stateName, Update update)
         {
+            _previosState = _currentState;
             _currentState = _states.First(s=> s.Name == stateName);
             await _currentState.ExecuteStateAsync(update);
         }

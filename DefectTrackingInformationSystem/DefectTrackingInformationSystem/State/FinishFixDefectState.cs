@@ -4,6 +4,7 @@ using DefectTrackingInformationSystem.Service;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 using Telegram.Bot;
+using Telegram.Bot.Requests;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
@@ -33,19 +34,27 @@ namespace DefectTrackingInformationSystem.State
                     _dataBaseContext.Defectes.Update(defect);
                     await _dataBaseContext.SaveChangesAsync();
 
-                    await _botClient.EditMessageTextAsync(update.CallbackQuery.Message.Chat.Id, update.CallbackQuery.Message.MessageId, "✅ Fix");
+                    if(update.CallbackQuery.Message.Photo != null)
+                    {
+                       
+                        await _botClient.EditMessageCaptionAsync(update.CallbackQuery.Message.Chat.Id, update.CallbackQuery.Message.MessageId, "✅ Fix");
+                    }
+                    else if(update.CallbackQuery.Message.Text != null)
+                    {
 
+                        await _botClient.EditMessageTextAsync(update.CallbackQuery.Message.Chat.Id, update.CallbackQuery.Message.MessageId, "✅ Fix");
+                    }
                     message.AppendLine($"Ви успішно виправили дефект {update.CallbackQuery.Data} , так тримати, продовжуйте в цьому ж дусі)");
                     await _botClient.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, message.ToString(), ParseMode.Markdown);
                 }
                 else
                 {
-                    await _botClient.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, "Помилка при пошуку даного дефекту...", ParseMode.Markdown);
+                    await _botClient.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, "Помилка при пошуку даного дефекту...", ParseMode.Markdown, replyMarkup: Keyboards.GetButtons());
                 }
             }
             catch(Exception ex)
             {
-                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, $"Помилка в FinishFixDefectState з дефектом {update.CallbackQuery.Data}...\n{ex.Message}", ParseMode.Markdown) ; 
+                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, $"Помилка в FinishFixDefectState з дефектом {update.CallbackQuery.Data}...\n{ex.Message}", ParseMode.Markdown, replyMarkup: Keyboards.GetButtons()) ; 
             }                                   
         }
     }

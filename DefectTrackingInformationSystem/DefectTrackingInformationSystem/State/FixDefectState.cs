@@ -51,10 +51,31 @@ namespace DefectTrackingInformationSystem.State
                                 await _botClient.SendTextMessageAsync(update.Message.Chat.Id, message.ToString(), ParseMode.Markdown, replyMarkup: GetInlineButton(el.Id));
                                 message.Clear();
                             }
+                            foreach (var el in defects)
+                            {                             
+                                    message.AppendLine($" ----- \n Id: {el.Id} \n Номер кімнати: {el.RoomNumber} \n Опис: {el.Description}");
+                                    if (el.ImageString != null)
+                                    {
+                                        var directory = new DirectoryInfo(
+                                        Directory.GetCurrentDirectory());
+
+                                        var imagePath = Path.Combine(directory.Parent.FullName, $"{el.ImageString}");
+                                        using (var stream = System.IO.File.OpenRead(imagePath))
+                                        {
+                                            await _botClient.SendPhotoAsync(update.Message.Chat.Id, new Telegram.Bot.Types.InputFiles.InputOnlineFile(stream), caption: message.ToString(), ParseMode.Markdown, replyMarkup: GetInlineButton(el.Id));
+                                        }
+                                    }
+                                    else
+                                    {
+                                        await _botClient.SendTextMessageAsync(update.Message.Chat.Id, message.ToString(), ParseMode.Markdown, replyMarkup: GetInlineButton(el.Id));
+                                    }
+                                    message.Clear();
+                               
+                            }
                         }
                         else
                         {
-                            await _botClient.SendTextMessageAsync(update.Message.Chat.Id, "Немає наявних дефектів, можна відпочити)))", ParseMode.Markdown);
+                            await _botClient.SendTextMessageAsync(update.Message.Chat.Id, "Немає наявних дефектів, можна відпочити)))", ParseMode.Markdown, replyMarkup: Keyboards.GetButtons());
                         }
                     }
                     else
@@ -70,7 +91,7 @@ namespace DefectTrackingInformationSystem.State
             catch(Exception ex)
             {
                 var messageText = $"Помилка в FixDefectState: \n{ex.Message}";
-                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
+                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown, replyMarkup: Keyboards.GetButtons());
             }
 
             

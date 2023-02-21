@@ -53,7 +53,7 @@ namespace DefectTrackingInformationSystem.State
                 keyboardButtons.Add(new List<KeyboardButton> { new KeyboardButton("Переглянути наявні дефекти") });
                 keyboardButtons.Add(new List<KeyboardButton> { new KeyboardButton("Виправити дефекти") });
             }
-            else
+            else if(await _userService.IsInRoleAsync(user, RoleNames.TechnicalStaff))
             {
                 keyboardButtons.Add(new List<KeyboardButton> { new KeyboardButton("Повідомити про дефект") });
             }

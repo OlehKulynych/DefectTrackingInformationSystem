@@ -8,52 +8,48 @@ using Telegram.Bot.Types;
 
 namespace DefectTrackingInformationSystem.State
 {
-    public class InputNumberRoomState: BaseDefectState
+    public class InputNumberRoomState : BaseDefectState
     {
         private readonly TelegramBotClient _botClient;
-    
-       
+
+
 
         public InputNumberRoomState(TelegramBotService telegramBotService)
         {
-            _botClient = telegramBotService.GetTelegramBot().Result;  
-            
+            _botClient = telegramBotService.GetTelegramBot().Result;
+
         }
 
         public override string Name => CommandNames.InputNumberRoomsCommand;
 
         public override async Task ExecuteStateAsync(Update update)
         {
-            try
+
+            var message = update.Message;
+            if (defect.RoomNumber == 0)
             {
-                var message = update.Message;
                 if (message.Text != null)
                 {
                     uint numRoom;
                     if (uint.TryParse(message.Text, out numRoom))
                     {
                         defect.RoomNumber = numRoom;
-
-                        var messageText = "Опишіть проблему: ";
-                        await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
                     }
                     else
                     {
-                        var messageText = "Повторіть ще раз, ви надіслали не число. ";
-                        await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
+                        await _botClient.SendTextMessageAsync(update.Message.Chat.Id, "Повторіть ще раз, ви надіслали не число. ", ParseMode.Markdown, replyMarkup: Keyboards.GetButtons());
+                        throw new Exception();
                     }
                 }
                 else
-                {
-                    var messageText = "Повторіть ще раз, тут має бути текст. ";
-                    await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
+                {                    
+                    await _botClient.SendTextMessageAsync(update.Message.Chat.Id, "Повторіть ще раз, тут має бути текст. ", ParseMode.Markdown, replyMarkup: Keyboards.GetButtons());
+                    throw new Exception();
                 }
             }
-            catch(Exception ex)
-            {
-                var messageText = $"Помилка в InputNumberRoomState: \n{ex.Message}";
-                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown);
-            }           
+            var messageText = "Опишіть проблему: ";
+            await _botClient.SendTextMessageAsync(update.Message.Chat.Id, messageText, ParseMode.Markdown, replyMarkup: Keyboards.GetButtons());
+                      
         }
     }
 }

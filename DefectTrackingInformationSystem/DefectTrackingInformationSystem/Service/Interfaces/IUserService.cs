@@ -10,5 +10,7 @@ namespace DefectTrackingInformationSystem.Service.Interfaces
 
         Task<IList<string>> GetRolesAsync(User user);
         Task<bool> IsInRoleAsync(User user, string roleName);
+        Task<IList<User>> GetUsersInRoleAsync(string roleName);
+
     }
 }
